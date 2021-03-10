@@ -1,9 +1,10 @@
 import { ApiSync } from './ApiSync'
 import { Attributes } from './Attributes'
+import { Collection } from './Collection'
 import { Eventing } from './Eventing'
 import { Model } from './Model'
 
-const URL = 'http://localhost:3000/users'
+export const URL = 'http://localhost:3000/users'
 
 export interface UserProps {
   id?: number
@@ -22,5 +23,16 @@ export class User extends Model<UserProps> {
 
   isAdminUser(): boolean {
     return this.get('id') === 1
+  }
+
+  static buildUserCollection(): Collection<User, UserProps> {
+    return new Collection<User, UserProps>(URL, (json: UserProps) =>
+      User.buildUser(json)
+    )
+  }
+
+  setRandomAge(): void {
+    const age = Math.round(Math.random() * 100)
+    this.set({ age })
   }
 }
